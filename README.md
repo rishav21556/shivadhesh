@@ -52,10 +52,6 @@ To set up the Shivadhesh E-commerce website locally, follow these steps:
 8. Start the development server: `python manage.py runserver`.
 9. Access the website at: `http://127.0.0.1:8000/users/home/All/`.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE), allowing you to modify, distribute, and use the code for personal and commercial purposes.
-
 ## Contact
 
 For any inquiries or feedback, please contact the project maintainer:

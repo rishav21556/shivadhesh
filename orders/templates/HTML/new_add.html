@@ -1,0 +1,68 @@
+{%extends "HTML/orders_base.html"%}
+
+
+{%block main%}
+
+    
+
+    <form class = "custom-form" action = "{%url 'adding_address' status=STATUS%}" method="post">
+
+        {%csrf_token%}
+
+        {% if STATUS == 'new'%}
+
+            <h1 class = "custom-heading"> ADD NEW ADDRESS </h1>
+
+        {% else %}
+
+            <h3>UPDATE THE ADDRESS </h3>
+
+        {% endif %}
+
+
+        <div class="mb-3">
+        <label for="Country" class="form-label">Country : </label>
+        <input type="text" class="form-control" name = "country" id="Country" >
+        </div>
+
+        <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name : </label>
+        <input type="text" class="form-control" name = "fullName" id="fullName">
+        </div>
+        
+        <div class="mb-3">
+        <label for="streetAddr" class="form-label">Street Address : </label>
+        <input type="text" class="form-control" id="streetAddr" name = "streetAddr" placeholder="Street Name, Apartment, Building, P.O,floor, etc.">
+        </div>
+        
+        <div class="mb-3">
+        <label for="city" class="form-label">City : </label>
+        <input type="text" class="form-control" name = "city" id="city">
+        </div>
+        <div class="mb-3">
+        <label for="state" class="form-label">State : </label>
+        <input type="text" class="form-control" name = "state" id="state">
+        </div>
+        <div class="mb-3">
+        <label for="pincode" class="form-label">Pincode : </label>
+        <input type="text" class="form-control"  name = "pincode" id="pincode">
+        </div>
+        <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number : </label>
+        <input type="text" class="form-control" name = "phoneNumber" id="phoneNumber">
+        </div>
+
+
+        {% if STATUS == 'new'%}
+
+            <button type = "submit"class="btn btn-primary custom-btn">SAVE</button>
+
+        {% else %}
+
+            <button type = "submit"class="btn btn-primary custom-btn">UPDATE</button>
+
+        {% endif %}
+        
+    </form>
+
+{% endblock %}

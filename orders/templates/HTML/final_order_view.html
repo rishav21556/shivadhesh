@@ -1,0 +1,73 @@
+{%extends "HTML/view_base.html"%}
+
+{%block product%}
+
+
+<h3>Order Items</h3>
+<hr>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Count</th>
+        <th scope="col">Retail Price</th>
+        <th scope="col">Discount</th>
+      </tr>
+    </thead>
+    <tbody>
+        {%for cart_record in cart%}
+            <tr>
+                <td>{{cart_record.0.Name}}</td>
+                <td>{{cart_record.1}}</td>
+                <td>{{cart_record.0.retail_price}}</td>
+                <td>{{cart_record.0.discount}} %</td>
+            </tr>
+        {%endfor%}
+    </tbody>
+  </table>
+{%endblock%}
+
+{%block total%}
+
+<h4>Total Cost : {{tot_cost}}</h4>
+<h4>Total number of Items : {{tot_item}} </h4>
+
+{%endblock%}
+
+{%block payment%}
+
+<button class="btn btn-success custom-add-new-btn" id="pay-btn">PROCEED TO PAY</button>
+
+<!-- Razorpay's Javascript code. -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = {
+     
+    // Enter the Key ID generated from the Dashboard
+    key: "{{ razor_pub_key }}",
+     
+    // Amount is in currency subunits.
+    // Default currency is INR. Hence,
+    // 50000 refers to 50000 paise
+    amount: "{{ amount }}",
+    currency: "{{ currency }}",
+     
+    // Your/store name.
+    name: "Shivadhesh",
+     
+    // Pass the `id` obtained in the response of Step 1
+    order_id: "{{ order_id }}",
+    callback_url: "{{ callback_url }}"
+  };
+   
+  // initialise razorpay with the options.
+  var rzp1 = new Razorpay(options);
+   
+  // add event listener to the payment button.
+  document.getElementById("pay-btn").onclick = function (e) {
+    rzp1.open();
+    e.preventDefault();
+  };
+</script>
+{%endblock%}
+

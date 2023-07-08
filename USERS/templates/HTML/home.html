@@ -1,0 +1,27 @@
+{%extends "HTML/base.html"%}
+
+{%block main%}
+
+    <div class="show-product">
+        {% for result in results%}
+            <div id = "product">
+                <a href="{%url 'product' product_id=result.id%}"><img src="{{result.prod_img.url}}" class = "img-fluid" alt="" id = "home-product-imag"></a>
+                <p id = "imag-desc">
+                    {{result.Name}} <br>
+                    Price : {{result.retail_price}} <br>
+                    {%if result.discount != 0%}
+                    Discount : {{result.discount}} %
+                    {%else%}
+                    Discount : NIL
+                    {%endif%}
+                </p>
+            </div>
+        {% endfor%}
+        {%if not results %}
+        <h3 style="margin-top: 100px;">no result found...</h3>
+        {%endif%}
+    </div>
+    
+
+{%endblock%}
+

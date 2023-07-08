@@ -1,0 +1,79 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shivadhesh</title>
+    <link rel="stylesheet" href = "{% static 'css/order_addr.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    {%block header%}
+
+    {% if product == 'cart' %}
+
+    <a href="{% url 'cart_view'%}" class = "btn btn-primary custom-go-to-cart">GO TO CART</a>
+
+    {%endif%}
+
+    {%endblock%}
+
+
+
+
+
+    <div class="custom-form">
+        {%block address%}
+        <h3>Address </h3>
+        <hr>
+        <table class = "table">
+            <tr>
+                <td>Full Name </td>
+                <td>{{addr.Full_name}}</td>
+            </tr>
+            <tr>
+                <td>Street Address</td>
+                <td>{{addr.stree_addr}}</td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td>{{addr.City}}</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td>{{addr.State}}</td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td>{{addr.phone_number}}</td>
+            </tr>
+            <tr>
+                <td>Pincode</td>
+                <td>{{addr.Pin_code}}</td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td>{{addr.Country}}</td>
+            </tr>
+        </table>
+        {%endblock%}
+        {%block product%}
+
+        {%endblock%}
+
+        {%block total%}
+
+        {%endblock%}
+
+        {%block payment%}
+
+        {%endblock%}
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>

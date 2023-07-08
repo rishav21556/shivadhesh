@@ -1,0 +1,29 @@
+{% extends "HTML/orders_base.html"%}
+
+
+{%block pop_up%}
+
+{%endblock%}
+
+{% block main %}
+
+<form action="{% url 'proceed-payment' PRODUCT=PRODUCT %}" class = "custom-form" method = "post">
+    {%csrf_token%}
+    <h3 class = "custom-heading">Select Shipping Address</h3>
+    {%for address in addr%}
+    <div class="input-group custom-grp">
+        <div class="input-group-text">
+          <input class="form-check-input mt-0" type="radio" name="radio-addr-sel" value="{{address.id}}" id = "{{address.id}}" required >
+        </div>
+        <a href="{% url 'view_addr' address_id=address.id%}" class = "btn btn-danger">{{address.Full_name}}, {{address.stree_addr}}</a>
+        <a href="{% url 'adding_address' status=address.id%}"class = "edit-btn">Edit</a>
+
+    </div>
+    {%endfor%}
+    <a href="{%url 'adding_address' status='new'%}" class = "btn btn-success custom-add-new-btn">Add Another Address</a>
+    <button  type = "submit"class = "btn btn-primary custom-add-new-btn">PROCEED</button>
+
+        
+
+
+{% endblock %}

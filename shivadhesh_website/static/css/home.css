@@ -1,0 +1,60 @@
+
+.custom-color{
+  background-color: #FF0060;
+  border :solid green 1px;
+}
+.custom-button{
+  background-color: green;
+  border-radius: 5px;
+  width : 100px;
+  border :solid green 1px;
+  box-shadow: green;
+}
+.custom-nav-link{
+  color : white;
+  text-decoration: none; 
+  margin : 20px;
+  padding-top : 40px;
+}
+.custom-nav-link:active{
+  color : black;
+}
+#nav-shivadhesh-text{
+  color : #F6FA70;
+  padding-top : 10px;
+}
+.custom-search{
+  margin : 20px 0px 20px 20px;
+}
+
+#home-product-imag{
+  height : 200px;
+  width : 200px;
+  border-radius: 5px;;
+}
+#product{
+  display: inline-block;
+  margin : 20px;
+  border : black 1px solid;
+  padding : 20px;
+}
+#imag-desc{
+  text-align: center;
+}
+.search-container{
+  background-color: white;
+  color : black;
+
+}
+.search-carry:hover{
+  background-color:rgb(156, 199, 255);
+}
+.autocomplete{
+  margin-right : 20px;
+}
+.bottom-card {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}

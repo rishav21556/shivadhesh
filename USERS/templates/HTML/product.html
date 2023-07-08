@@ -1,0 +1,110 @@
+
+{%extends "HTML/base.html"%}
+{%block main%}
+
+
+
+{% if messages %}
+    <div class="alert alert-primary" role="alert">
+        {%for message in messages%}
+            {{message}}
+        {%endfor%}
+    </div>
+{% endif %}
+
+
+{%if redirect == "view_cart"%}
+    <a class="btn btn-danger custom-checkout" href="{% url 'addr_sel' product='cart' %}">CheckOut</a>
+{%else%}
+    {%if request.user.is_authenticated%}
+    {%for data in datas%}
+    <a class="btn btn-danger custom-checkout" href="{% url 'addr_sel' product=datas.0.id %}">Buy Now</a>
+    {%endfor%}
+    {%else%}
+    <a class="btn btn-danger custom-checkout" href="/accounts/login">Buy Now</a>
+    {%endif%}
+{%endif%}
+
+<div class="card product-custom-div"  >
+    <table class="table">
+        {%for data in datas%}
+        <tr>
+        <td><img src="{{data.prod_img.url}}" class="card-img-top product-custom-image" alt="..."></td>
+        <td>
+            <h5 class="card-title">{{data.Name}}</h5>
+            <p class="card-text product-custom-para-desc" >{{data.description}}</p>
+            <p class="card-text product-custom-para-desc" >Price : {{data.retail_price}}</p>
+            <p class="card-text product-custom-para-desc" >Discount : {{data.discount}}%</p>
+            {% if not cart_data %}
+            <a href="{% url 'cart_add' product_id=data.id%}?direct={{redirect}}" class="btn btn-primary" >Add to Cart</a>
+            {% else %}
+            <div class="dropdown">
+
+                <a href="{% url 'cart_remove' product_id=data.id %}?direct={{redirect}}" class="btn btn-primary" >Remove From Cart</a>
+
+                {%if redirect == "view_cart"%}
+                <select class="form-select custom-dropdown" aria-label="Default select example" id = {{data.id}}>
+                    <script>
+                        for (var count = 1; count <= 100; count++) {
+                            document.write('<option value="'+ count +'">' + count + '</option>');
+                        }
+                    </script>
+                </select>
+                {%endif%}
+            </div>
+
+            {%endif%}
+        </td>
+        </tr>
+        {%endfor%}
+    </table>
+    
+</div>
+
+
+
+<script >
+    let tot_cost = 0;
+    let quantity_div = document.getElementsByClassName("dropdown");
+    if (quantity_div){
+        let tot_item = 0;
+        for (let i = 1;i<quantity_div.length ; i++){
+            let curr_div = quantity_div[i];
+            let child = curr_div.children;
+            let select = child[1];
+            jQuery.ajax({
+                url : "http://127.0.0.1:8000/users/home/get-cart-count/"+select.id,
+                method : "GET",
+                dataType:'json',
+                success : function(response){
+                    select.value = response['res'];
+                },
+                error: function(xhr, status, error) {
+                    console.log("error")
+                }
+                
+            })
+            
+        }
+    }
+    if (quantity_div){
+        for (let i = 1;i<quantity_div.length ; i++){
+            let curr_div = quantity_div[i];
+            let child = curr_div.children;
+            let select = child[1];
+            select.addEventListener('change',function(){
+                jQuery.ajax({
+                    url : "http://127.0.0.1:8000/users/home/update-cart/"+select.id+"?value="+select.value,
+                    method : "GET",
+                    dataFilter:'http',
+                    success : function(response){
+                        window.location.href = response
+                    }
+                })
+
+            });
+        }
+    }
+</script>
+{%endblock%}
+

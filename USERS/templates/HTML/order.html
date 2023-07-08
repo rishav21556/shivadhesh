@@ -1,0 +1,47 @@
+{%extends "HTML/base.html"%}
+
+{%block main%}
+
+<h1 class = "h1">CURRENT ORDER</h1>
+
+<table class = "table table-bordered mt-5 table-hover">
+    <tr>
+        <td>Payment ID</td>
+        <td>{{payment_id}}</td>
+    </tr>
+    <tr>
+        <td>Razorpay Order ID</td>
+        <td>{{razorpay_order_id}}</td>
+    </tr>
+    <tr>
+        <td>PAID</td>
+        <td>{{paid}}</td>
+    </tr>
+    <tr onclick = "window.location.href  = 'http://127.0.0.1:8000/orders/view_addr/{{addr.id}}' ">
+        <td>Address</td>
+        <td><p>{{addr.Full_name}}<br> {{addr.stree_addr}}</p> </td>
+    </tr>
+
+    
+</table>
+
+<table class="table">
+    <tr>
+        <td>Product Name</td>
+        <td>Product Count</td>
+    </tr>
+    
+        {%for product in products%}
+        <tr>
+            <td><a href="{%url 'product' product_id=product.0.id%}">{{product.0.Name}}</a></td>
+            <td>{{product.1}}</td>
+        </tr>
+           
+        {%endfor%}
+
+</table>
+
+<h3 class = "ml-4">ORDER AMOUNT : {{amount}} rupees</h3>
+
+
+{%endblock%}

@@ -2,11 +2,7 @@
 
 This is the official repository for the Shivadhesh E-commerce website, a full-stack web application built using HTML, CSS, JavaScript, Bootstrap, Django, and Python.
 
-## Problem Statement
-
-**Problem:** The Shivadhesh E-commerce website aims to provide a platform for selling a wide range of products, but it lacks a user-friendly and efficient online shopping experience.
-
-**Solution:** The goal of this project is to create a robust and feature-rich e-commerce website called Shivadhesh that addresses the following challenges:
+The goal of this project is to create a robust and feature-rich e-commerce website called Shivadhesh that addresses the following challenges:
 
 1. **User-friendly Interface**: Design and develop an intuitive and visually appealing user interface that ensures easy navigation and enhances the overall user experience.
 
@@ -19,8 +15,6 @@ This is the official repository for the Shivadhesh E-commerce website, a full-st
 5. **Order Management**: Create a system for managing and tracking orders, including order placement, status updates, and order history for both users and administrators.
 
 6. **User Authentication**: Implement user authentication and authorization mechanisms to ensure secure access to user-specific features such as order history, wishlists, and account settings.
-
-7. **Admin Dashboard**: Develop an intuitive and powerful admin dashboard that enables administrators to manage products, orders, user accounts, and other relevant aspects of the website.
 
 ## Project Structure
 
@@ -56,17 +50,7 @@ To set up the Shivadhesh E-commerce website locally, follow these steps:
 6. Install the project dependencies: `pip install -r requirements.txt`.
 7. Run database migrations: `python manage.py migrate`.
 8. Start the development server: `python manage.py runserver`.
-9. Access the website at: `http://localhost:8000`.
-
-## Contribution
-
-Contributions to the Shivadhesh E-commerce website are welcome! If you would like to contribute, please follow these steps:
-
-1. Fork the repository on GitHub.
-2. Create a new branch for your feature/bug fix: `git checkout -b my-feature`.
-3. Commit your changes: `git commit -am 'Add new feature'`.
-4. Push the branch to your forked repository: `git push origin my-feature`.
-5. Submit a pull request, explaining your changes and their purpose.
+9. Access the website at: `http://127.0.0.1:8000/users/home/All/`.
 
 ## License
 
@@ -74,10 +58,9 @@ This project is licensed under the [MIT License](LICENSE), allowing you to modif
 
 ## Contact
 
-For any inquiries or feedback, please contact the project maintainers:
+For any inquiries or feedback, please contact the project maintainer:
 
-- John Doe - john.doe@example.com
-- Jane Smith - jane.smith@example.com
+- Rishav Raj - rishav21556@iiitd.ac.in
 
 Feel free to open an issue if you encounter any problems or have suggestions for improvement.
 

@@ -1,3 +1,7 @@
+# Shivadhesh E-commerce Website
+
+This is the official repository for the Shivadhesh E-commerce website, a full-stack web application built using HTML, CSS, JavaScript, Bootstrap, Django, and Python.
+
 ## Problem Statement
 
 **Problem:** The Shivadhesh E-commerce website aims to provide a platform for selling a wide range of products, but it lacks a user-friendly and efficient online shopping experience.
@@ -80,4 +84,3 @@ Feel free to open an issue if you encounter any problems or have suggestions for
 We hope you find the Shivadhesh E-commerce website useful and enjoy using it!
 
 Happy shopping!
-

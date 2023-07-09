@@ -5,6 +5,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
+from verify_email.email_handler import send_verification_email
+from django.core.mail import EmailMessage
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 # Create your views here.
 
 def Login(request):
@@ -17,11 +24,41 @@ def Login(request):
             messages.info(request,"Invalid Credentials")
             return redirect ("/accounts/login")
         
+        if (not user.is_active):
+            messages.info(request,"Please verify your Signup on your")
+            return redirect ("/accounts/login")
+        
         login(request,user)
         return redirect ("/users/home/All")
         
 
     return render(request,"HTML/Login.html")
+
+
+
+def verify_email(request, user_id, token):
+    user = User.objects.filter(id=user_id)
+
+    if ( not user):
+        messages.info(request,'USER DONOT EXISTS')
+        return redirect('/accounts/signup')
+    user = user[0]
+    if default_token_generator.check_token(user, token):
+        # Set a flag or update the user's email_verified field
+        user.is_active = True
+        user.save()
+        messages.info(request,"New User Created !")
+        return redirect("/accounts/login")
+    else:
+        messages.info(request,'COULD NOT VERIFY EMAIL')
+        return redirect('/accounts/signup')
+def send_verification_email(user,request):
+    token = default_token_generator.make_token(user)
+    current_site = get_current_site(request)
+    email_subject = 'Activate your account'
+    email_body = f'Click the following link to verify your email: {current_site.domain}/accounts/verify/{user.id}/{token}'
+    email = EmailMessage(email_subject, email_body, to=[user.email])
+    email.send()
 
 def SignUp(request):
     if (request.method=="POST"):
@@ -32,16 +69,33 @@ def SignUp(request):
         confirm_password = request.POST.get('confirm_password')
         email = request.POST.get('Email')
 
+
+        user = User.objects.filter(email = email)
+        if user:
+            user = user[0]
+        if (user):
+            if (user.is_active):
+                messages.info(request,'This email already exists')
+                return redirect('/accounts/signup')
+            else:
+                send_verification_email(user,request)
+                messages.info(request,'A verification mail has been sent')
+                return redirect('/accounts/login')
+
         user = User.objects.filter(username=user_name)
         if (user):
             messages.info(request,'This User Name is not Available !')
             return redirect('/accounts/signup')
-        user = User.objects.filter(email = email)
-        if (user):
-            messages.info(request,'This email already exists')
-            return redirect('/accounts/signup')
+        
         if (confirm_password!=password):
             messages.info(request,'Passwords didn\'t match !')
+            return redirect('/accounts/signup')
+        
+        try:
+
+            validate_email(email)
+        except ValidationError:
+            messages.info(request,'This email address is not valid')
             return redirect('/accounts/signup')
         
         user = User.objects.create(
@@ -50,10 +104,14 @@ def SignUp(request):
             username = user_name,
             email = email
         )
+        user.is_active = False
         user.set_password(password)
         user.save()
-        messages.info(request,"New User Created !")
-        return redirect("/accounts/login")
+        send_verification_email(user,request)
+
+        messages.info(request,'A verification mail has been sent')
+        return redirect('/accounts/login')
+        
     return render(request,"HTML/SignUp.html")
 
 def Logout(request):

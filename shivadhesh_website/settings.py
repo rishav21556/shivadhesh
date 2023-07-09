@@ -35,6 +35,17 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# EMAIL VERIFICATION 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_ID') 
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PW')
+
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ID')
+
+
 
 # Application definition
 
@@ -49,12 +60,14 @@ INSTALLED_APPS = [
 EXTERNAL_APPS = [
     'USERS',
     'accounts',
-    'orders'
+    'orders',
+    "verify_email.apps.VerifyEmailConfig",
 ]
 INSTALLED_APPS = INSTALLED_APPS + EXTERNAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -142,6 +155,9 @@ STATICFILES_DIRS = [
 
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,'assets')
+# Simplified static file serving.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
@@ -155,5 +171,12 @@ RAZOR_KEY = os.getenv('RAZOR_KEY')
 RAZOR_SECRET_KEY = os.getenv('RAZOR_SECRET_KEY')
 
 # CSRF_TRUSTED_ORIGINS = ['https://api.razorpay.com']
+
+# Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+
 
 

@@ -85,7 +85,14 @@ class Search:
             product_dir.append((prod.product_id,prod.count))
 
         return render(request,"HTML/order.html",{'payment_id':payment_id,'razorpay_order_id':razorpay_order_id,'paid':paid,'addr':addr,'products':product_dir,'amount':amount})
+    
+    def getAllCategories(request):
+        categories = Category.objects.all()
+        return categories
 
+    def getCategories(request):
+        categories = Search.getAllCategories(request)
+        return render(request,"HTML/categories.html",{'categories':categories})
 
         
 

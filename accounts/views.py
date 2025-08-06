@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
@@ -11,6 +12,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+import smtplib
+from email.mime.text import MIMEText
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 # Create your views here.
 
@@ -53,12 +58,29 @@ def verify_email(request, user_id, token):
         messages.info(request,'COULD NOT VERIFY EMAIL')
         return redirect('/accounts/signup')
 def send_verification_email(user,request):
-    token = default_token_generator.make_token(user)
-    current_site = get_current_site(request)
+    # token = default_token_generator.make_token(user)
+    # current_site = get_current_site(request)
     email_subject = 'Activate your account'
-    email_body = f'Click the following link to verify your email: {current_site.domain}/accounts/verify/{user.id}/{token}'
-    email = EmailMessage(email_subject, email_body, to=[user.email])
-    email.send()
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    current_site = get_current_site(request)
+    verification_link = f"http://{current_site.domain}/accounts/verify/{user.id}/{token}/"
+    email_body = f'Click the following link to verify your email: {verification_link}'
+
+    # Replace these with your Gmail address and app password
+    sender_email = os.getenv('EMAIL_ID')
+    sender_password = os.getenv('EMAIL_PW')
+
+    msg = MIMEText(email_body)
+    msg['Subject'] = email_subject
+    msg['From'] = sender_email
+    msg['To'] = user.email
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, sender_password)
+    server.send_message(msg)
+    server.quit()
 
 def SignUp(request):
     if (request.method=="POST"):
@@ -92,7 +114,6 @@ def SignUp(request):
             return redirect('/accounts/signup')
         
         try:
-
             validate_email(email)
         except ValidationError:
             messages.info(request,'This email address is not valid')

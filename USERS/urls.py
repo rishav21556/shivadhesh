@@ -20,7 +20,6 @@ urlpatterns = [
     path('home/get-cart-count/<product_id>/',cart_fun.Cart.cart_function_get_count,name = 'get_cart_count'),
 
     path('getOrders/',views_search.Search.getAllOrders,name = 'view_orders'),
-    path('getOrders/<order_id>/',views_search.Search.order_detail,name = 'view_orders')
-
-    
+    path('getOrders/<order_id>/',views_search.Search.order_detail,name = 'view_orders'),
+    path('getCategories/',views_search.Search.getAllCategories,name = 'get_categories'),
 ]

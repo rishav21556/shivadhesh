@@ -1,8 +1,8 @@
 
+import views_search from '../views/views_search.js';
 
 
-
-let category_list = ['All','Books and Media','Sports and Fitness','Beauty and Personal Care','Home and Kitchen','Fashion','Electronics'];
+let category_list = views_search.Search.getCategories();
 let category = document.getElementsByClassName("category");
 category = category[0];
 

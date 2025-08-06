@@ -40,9 +40,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_ID') 
+EMAIL_USE_SSL = False  # Don't use SSL when using TLS
+EMAIL_HOST_USER = os.getenv('EMAIL_ID')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PW')
-
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ID')
 
 
@@ -102,15 +102,12 @@ WSGI_APPLICATION = 'shivadhesh_website.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DATABASE_NAME'),  
-        'USER': os.getenv('DATABASE_USER'),  
-        'PASSWORD': os.getenv('DATABASE_PASS'),  
-        'HOST': '127.0.0.1',  
-        'PORT': '3306',  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASS'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
     }
 }
 
@@ -173,9 +170,9 @@ RAZOR_SECRET_KEY = os.getenv('RAZOR_SECRET_KEY')
 # CSRF_TRUSTED_ORIGINS = ['https://api.razorpay.com']
 
 # Update database configuration from $DATABASE_URL.
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 
 

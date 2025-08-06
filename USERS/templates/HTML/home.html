@@ -1,27 +1,67 @@
-{%extends "HTML/base.html"%}
+{% extends "HTML/base.html" %}
 
-{%block main%}
-
-    <div class="show-product">
-        {% for result in results%}
-            <div id = "product">
-                <a href="{%url 'product' product_id=result.id%}"><img src="{{result.prod_img.url}}" class = "img-fluid" alt="" id = "home-product-imag"></a>
-                <p id = "imag-desc">
-                    {{result.Name}} <br>
-                    Price : {{result.retail_price}} <br>
-                    {%if result.discount != 0%}
-                    Discount : {{result.discount}} %
-                    {%else%}
-                    Discount : NIL
-                    {%endif%}
-                </p>
-            </div>
-        {% endfor%}
-        {%if not results %}
-        <h3 style="margin-top: 100px;">no result found...</h3>
-        {%endif%}
+{% block main %}
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+            Featured Products
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-600 mx-auto rounded-full"></div>
     </div>
-    
 
-{%endblock%}
-
+    {% if results %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {% for result in results %}
+        <div class="group">
+            <div class="backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <!-- Product Image -->
+                <div class="aspect-square overflow-hidden bg-white/5">
+                    <a href="{% url 'product' product_id=result.id %}">
+                        <img 
+                            src="{{result.prod_img.url}}" 
+                            alt="{{result.Name}}" 
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        >
+                    </a>
+                </div>
+                
+                <!-- Product Info -->
+                <div class="p-4">
+                    <h3 class="text-white font-semibold text-lg mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
+                        {{result.Name}}
+                    </h3>
+                    
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-2xl font-bold text-green-400">
+                            ₹{{result.retail_price}}
+                        </div>
+                        {% if result.discount != 0 %}
+                        <div class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm font-semibold">
+                            {{result.discount}}% OFF
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <a 
+                        href="{% url 'product' product_id=result.id %}" 
+                        class="block w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 text-center"
+                    >
+                        <i class="fas fa-eye mr-2"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-500/20 rounded-full mb-6">
+            <i class="fas fa-search text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-2">No Products Found</h3>
+        <p class="text-gray-400">Try searching with different keywords or browse our categories.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -76,3 +76,20 @@ class Cart:
             'price': prod_price
         }
         return JsonResponse(ans)
+    
+    # In your views.py
+    def product_view(request, product_id):
+        product = Product.objects.get(id=product_id)
+        
+        # Calculate savings
+        if product.discount > 0:
+            savings = round(product.retail_price * product.discount / 100)
+        else:
+            savings = 0
+        
+        context = {
+            'datas': [product],
+            'savings': savings,
+            # ... other context variables
+        }
+        return render(request, 'your_template.html', context)

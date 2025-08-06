@@ -1,110 +1,167 @@
+{% extends "HTML/base.html" %}
 
-{%extends "HTML/base.html"%}
-{%block main%}
-
-
-
-{% if messages %}
-    <div class="alert alert-primary" role="alert">
-        {%for message in messages%}
-            {{message}}
-        {%endfor%}
-    </div>
-{% endif %}
-
-
-{%if redirect == "view_cart"%}
-    <a class="btn btn-danger custom-checkout" href="{% url 'addr_sel' product='cart' %}">CheckOut</a>
-{%else%}
-    {%if request.user.is_authenticated%}
-    {%for data in datas%}
-    <a class="btn btn-danger custom-checkout" href="{% url 'addr_sel' product=datas.0.id %}">Buy Now</a>
-    {%endfor%}
-    {%else%}
-    <a class="btn btn-danger custom-checkout" href="/accounts/login">Buy Now</a>
-    {%endif%}
-{%endif%}
-
-<div class="card product-custom-div"  >
-    <table class="table">
-        {%for data in datas%}
-        <tr>
-        <td><img src="{{data.prod_img.url}}" class="card-img-top product-custom-image" alt="..."></td>
-        <td>
-            <h5 class="card-title">{{data.Name}}</h5>
-            <p class="card-text product-custom-para-desc" >{{data.description}}</p>
-            <p class="card-text product-custom-para-desc" >Price : {{data.retail_price}}</p>
-            <p class="card-text product-custom-para-desc" >Discount : {{data.discount}}%</p>
-            {% if not cart_data %}
-            <a href="{% url 'cart_add' product_id=data.id%}?direct={{redirect}}" class="btn btn-primary" >Add to Cart</a>
-            {% else %}
-            <div class="dropdown">
-
-                <a href="{% url 'cart_remove' product_id=data.id %}?direct={{redirect}}" class="btn btn-primary" >Remove From Cart</a>
-
-                {%if redirect == "view_cart"%}
-                <select class="form-select custom-dropdown" aria-label="Default select example" id = {{data.id}}>
-                    <script>
-                        for (var count = 1; count <= 100; count++) {
-                            document.write('<option value="'+ count +'">' + count + '</option>');
-                        }
-                    </script>
-                </select>
-                {%endif%}
+{% block main %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="backdrop-blur-lg bg-blue-500/20 border border-blue-400/30 rounded-xl p-4 text-blue-200">
+            <div class="flex items-center">
+                <i class="fas fa-info-circle mr-3"></i>
+                {{ message }}
             </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-            {%endif%}
-        </td>
-        </tr>
-        {%endfor%}
-    </table>
-    
+    {% for data in datas %}
+    <div class="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+            <!-- Product Image -->
+            <div class="aspect-square overflow-hidden rounded-2xl bg-white/5">
+                <img 
+                    src="{{data.prod_img.url}}" 
+                    alt="{{data.Name}}" 
+                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                >
+            </div>
+            
+            <!-- Product Details -->
+            <div class="flex flex-col justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-4">{{data.Name}}</h1>
+                    
+                    <p class="text-gray-300 text-lg mb-6 leading-relaxed">{{data.description}}</p>
+                    
+                    <!-- Price Section -->
+                    <div class="bg-white/5 rounded-2xl p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <span class="text-gray-400 text-sm">Price</span>
+                                <div class="text-3xl font-bold text-green-400">₹{{data.retail_price}}</div>
+                            </div>
+                            {% if data.discount != 0 %}
+                            <div class="text-right">
+                                <span class="text-gray-400 text-sm">Discount</span>
+                                <div class="text-2xl font-bold text-red-400">{{data.discount}}%</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if data.discount != 0 %}
+                        <div class="flex items-center text-green-400 text-sm">
+                            <i class="fas fa-tag mr-2"></i>
+                            You save ₹{% widthratio data.retail_price 100 data.discount %}!
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="space-y-4">
+                    <!-- Cart Actions -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        {% if not cart_data %}
+                        <button onclick="addToCart('{{ data.id }}', '{{ redirect }}')" class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300">
+                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                        </button>
+                        {% else %}
+                        <div class="flex-1 space-y-2">
+                            <button onclick="removeFromCart('{{ data.id }}', '{{ redirect }}')" class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-300">
+                                <i class="fas fa-trash mr-2"></i>Remove from Cart
+                            </button>
+                            
+                            {% if redirect == "view_cart" %}
+                            <div class="flex items-center space-x-3">
+                                <span class="text-gray-300 text-sm font-medium">Quantity:</span>
+                                <select id="quantity-{{data.id}}" class="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <script>
+                                        for (var count = 1; count <= 100; count++) {
+                                            document.write('<option value="'+ count +'">' + count + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Buy Now Button -->
+                    <div class="border-t border-white/20 pt-4">
+                        {% if redirect == "view_cart" %}
+                        <a href="{% url 'addr_sel' product='cart' %}" class="block w-full text-center px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+                        </a>
+                        {% else %}
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'addr_sel' product=data.id %}" class="block w-full text-center px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-bolt mr-2"></i>Buy Now
+                            </a>
+                            {% else %}
+                            <a href="/accounts/login" class="block w-full text-center px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Login to Buy
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
+<script>
+function addToCart(productId, redirect) {
+    window.location.href = `{% url 'cart_add' product_id=0 %}`.replace('0', productId) + `?direct=${redirect}`;
+}
 
+function removeFromCart(productId, redirect) {
+    window.location.href = `{% url 'cart_remove' product_id=0 %}`.replace('0', productId) + `?direct=${redirect}`;
+}
 
-<script >
-    let tot_cost = 0;
-    let quantity_div = document.getElementsByClassName("dropdown");
-    if (quantity_div){
-        let tot_item = 0;
-        for (let i = 1;i<quantity_div.length ; i++){
-            let curr_div = quantity_div[i];
-            let child = curr_div.children;
-            let select = child[1];
+// Quantity management (your existing JavaScript logic)
+let tot_cost = 0;
+let quantity_div = document.getElementsByClassName("dropdown");
+if (quantity_div){
+    let tot_item = 0;
+    for (let i = 1;i<quantity_div.length ; i++){
+        let curr_div = quantity_div[i];
+        let child = curr_div.children;
+        let select = child[1];
+        jQuery.ajax({
+            url : "http://127.0.0.1:8000/users/home/get-cart-count/"+select.id,
+            method : "GET",
+            dataType:'json',
+            success : function(response){
+                select.value = response['res'];
+            },
+            error: function(xhr, status, error) {
+                console.log("error")
+            }
+        })
+    }
+}
+
+if (quantity_div){
+    for (let i = 1;i<quantity_div.length ; i++){
+        let curr_div = quantity_div[i];
+        let child = curr_div.children;
+        let select = child[1];
+        select.addEventListener('change',function(){
             jQuery.ajax({
-                url : "http://127.0.0.1:8000/users/home/get-cart-count/"+select.id,
+                url : "http://127.0.0.1:8000/users/home/update-cart/"+select.id+"?value="+select.value,
                 method : "GET",
-                dataType:'json',
+                dataFilter:'http',
                 success : function(response){
-                    select.value = response['res'];
-                },
-                error: function(xhr, status, error) {
-                    console.log("error")
+                    window.location.href = response
                 }
-                
             })
-            
-        }
+        });
     }
-    if (quantity_div){
-        for (let i = 1;i<quantity_div.length ; i++){
-            let curr_div = quantity_div[i];
-            let child = curr_div.children;
-            let select = child[1];
-            select.addEventListener('change',function(){
-                jQuery.ajax({
-                    url : "http://127.0.0.1:8000/users/home/update-cart/"+select.id+"?value="+select.value,
-                    method : "GET",
-                    dataFilter:'http',
-                    success : function(response){
-                        window.location.href = response
-                    }
-                })
-
-            });
-        }
-    }
+}
 </script>
-{%endblock%}
-
+{% endblock %}

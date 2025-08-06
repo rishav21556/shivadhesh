@@ -1,45 +1,115 @@
-{%extends "HTML/base.html"%}
+{% extends "HTML/base.html" %}
 
-{%block cssfile%}
+{% block main %}
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4">
+            <i class="fas fa-history text-white text-2xl"></i>
+        </div>
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2">
+            Order History
+        </h1>
+        <p class="text-gray-300">View all your previous orders</p>
+        <div class="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-600 mx-auto rounded-full mt-4"></div>
+    </div>
 
+    {% if orders %}
+    <div class="max-w-6xl mx-auto">
+        <div class="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Table Header -->
+            <div class="bg-white/10 px-6 py-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold text-gray-300">
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>
+                        Shipping Address
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-hashtag mr-2 text-green-400"></i>
+                        Order ID
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-purple-400"></i>
+                        Order Date
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="divide-y divide-white/10">
+                {% for order in orders %}
+                <div class="px-6 py-4 hover:bg-white/5 transition-colors duration-200 cursor-pointer group" onclick="window.location.href = '{{order.id}}';">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Address Column -->
+                        <div class="space-y-1">
+                            <div class="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                                {{order.order_addr_id.Full_name}}
+                            </div>
+                            <div class="text-gray-300 text-sm">
+                                {{order.order_addr_id.stree_addr}}
+                            </div>
+                            <div class="text-gray-400 text-xs">
+                                {{order.order_addr_id.City}}, {{order.order_addr_id.State}}
+                            </div>
+                        </div>
+
+                        <!-- Order ID Column -->
+                        <div class="flex items-center">
+                            <div class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-lg font-mono text-sm">
+                                #{{order.order_id}}
+                            </div>
+                        </div>
+
+                        <!-- Date Column -->
+                        <div class="flex items-center justify-between">
+                            <div class="text-gray-300">
+                                <div class="font-medium">{{order.date_time|date:"M d, Y"}}</div>
+                                <div class="text-xs text-gray-400">{{order.date_time|date:"g:i A"}}</div>
+                            </div>
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fas fa-arrow-right text-purple-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pagination or Load More (if needed) -->
+        <div class="text-center mt-8">
+            <p class="text-gray-400">
+                Showing {{orders|length}} order{{orders|length|pluralize}}
+            </p>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-20">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-500/20 rounded-full mb-6">
+            <i class="fas fa-shopping-bag text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-2">No Orders Yet</h3>
+        <p class="text-gray-400 mb-6">Start shopping to see your orders here!</p>
+        <a 
+            href="{% url 'home_category' category_='All' %}" 
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+        >
+            <i class="fas fa-shopping-cart mr-2"></i>
+            Start Shopping
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% block cssfile %}
 <style>
-      
-    tr:hover {
-    background-color: greenyellow;
-    }
-      
-</style>    
-    
-{%endblock%}
-
-{%block main%}
-
-<h1 class="h1">ORDERS</h1>
-
-
-<table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th scope="col">ADDRESS</th>
-        <th scope="col">ORDER ID</th>
-        <th scope="col">DATE</th>
-      </tr>
-    </thead>
-
-    {%for order in orders%}
-    <tbody>
-        <tr onclick = "window.location.href = '{{order.id}}' ;" >
-            <td><p>{{order.order_addr_id.Full_name}} <br> {{order.order_addr_id.stree_addr}}</p></td>
-            <td>{{order.order_id}}</td>
-            <td>{{order.date_time}}</td>
-            
-        </tr>
-        
-    </tbody>
-    {%endfor%}
-    
-  </table>
-  
-
-
-{%endblock%}
+/* Custom hover effects for order rows */
+.group:hover .group-hover\:text-purple-300 {
+    color: #d8b4fe;
+}
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+}
+</style>
+{% endblock %}
+{% endblock %}

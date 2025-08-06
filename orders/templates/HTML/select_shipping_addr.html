@@ -1,29 +1,102 @@
-{% extends "HTML/orders_base.html"%}
-
-
-{%block pop_up%}
-
-{%endblock%}
+{% extends "HTML/orders_base.html" %}
 
 {% block main %}
+<div class="flex justify-center">
+    <div class="w-full max-w-4xl">
+        <div class="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mb-4">
+                    <i class="fas fa-map-marker-alt text-white text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2">Select Shipping Address</h2>
+                <p class="text-gray-300">Choose your delivery address</p>
+            </div>
 
-<form action="{% url 'proceed-payment' PRODUCT=PRODUCT %}" class = "custom-form" method = "post">
-    {%csrf_token%}
-    <h3 class = "custom-heading">Select Shipping Address</h3>
-    {%for address in addr%}
-    <div class="input-group custom-grp">
-        <div class="input-group-text">
-          <input class="form-check-input mt-0" type="radio" name="radio-addr-sel" value="{{address.id}}" id = "{{address.id}}" required >
+            <form action="{% url 'proceed-payment' PRODUCT=PRODUCT %}" method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Address Cards -->
+                <div class="space-y-4">
+                    {% for address in addr %}
+                    <div class="group relative">
+                        <input 
+                            class="sr-only peer" 
+                            type="radio" 
+                            name="radio-addr-sel" 
+                            value="{{address.id}}" 
+                            id="{{address.id}}" 
+                            required
+                        >
+                        <label 
+                            for="{{address.id}}" 
+                            class="flex items-center p-6 bg-white/5 border-2 border-white/10 rounded-xl cursor-pointer hover:bg-white/10 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 transition-all duration-300"
+                        >
+                            <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-400 rounded-full mr-4 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all duration-300">
+                                <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-white mb-1">{{address.Full_name}}</h4>
+                                        <p class="text-gray-300 text-sm">{{address.stree_addr}}</p>
+                                        <p class="text-gray-400 text-xs mt-1">{{address.City}}, {{address.State}} - {{address.Pin_code}}</p>
+                                    </div>
+                                    
+                                    <div class="flex space-x-2">
+                                        <a 
+                                            href="{% url 'view_addr' address_id=address.id %}" 
+                                            class="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                        >
+                                            <i class="fas fa-eye mr-1"></i>View
+                                        </a>
+                                        <a 
+                                            href="{% url 'adding_address' status=address.id %}" 
+                                            class="inline-flex items-center px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                        >
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                    <a 
+                        href="{% url 'adding_address' status='new' %}" 
+                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                        <i class="fas fa-plus mr-2"></i>Add New Address
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                        <i class="fas fa-arrow-right mr-2"></i>Proceed to Payment
+                    </button>
+                </div>
+            </form>
         </div>
-        <a href="{% url 'view_addr' address_id=address.id%}" class = "btn btn-danger">{{address.Full_name}}, {{address.stree_addr}}</a>
-        <a href="{% url 'adding_address' status=address.id%}"class = "edit-btn">Edit</a>
-
     </div>
-    {%endfor%}
-    <a href="{%url 'adding_address' status='new'%}" class = "btn btn-success custom-add-new-btn">Add Another Address</a>
-    <button  type = "submit"class = "btn btn-primary custom-add-new-btn">PROCEED</button>
+</div>
 
-        
-
-
+<style>
+.peer:checked + label .peer-checked\:border-blue-500 {
+    border-color: #3b82f6;
+}
+.peer:checked + label .peer-checked\:bg-blue-500 {
+    background-color: #3b82f6;
+}
+.peer:checked + label .peer-checked\:bg-blue-500\/10 {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+.peer:checked + label .peer-checked\:opacity-100 {
+    opacity: 1;
+}
+</style>
 {% endblock %}

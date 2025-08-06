@@ -1,73 +1,105 @@
-{%extends "HTML/view_base.html"%}
+{% extends "HTML/view_base.html" %}
 
-{%block product%}
+{% block product %}
+<div class="mb-8">
+    <div class="flex items-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mr-4">
+            <i class="fas fa-shopping-bag text-white text-lg"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white">Order Items</h3>
+    </div>
+    
+    <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-white/10">
+                    <tr class="text-gray-300">
+                        <th class="px-6 py-4 text-left font-semibold">
+                            <i class="fas fa-box mr-2 text-blue-400"></i>Product Name
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-sort-numeric-up mr-2 text-green-400"></i>Quantity
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-tag mr-2 text-yellow-400"></i>Price
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-percent mr-2 text-red-400"></i>Discount
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-300">
+                    {% for cart_record in cart %}
+                    <tr class="border-t border-white/10 hover:bg-white/5 transition-colors duration-200">
+                        <td class="px-6 py-4 font-medium">{{cart_record.0.Name}}</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 bg-blue-500/20 text-blue-300 rounded-full font-semibold">
+                                {{cart_record.1}}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center font-semibold">₹{{cart_record.0.retail_price}}</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm font-semibold">
+                                {{cart_record.0.discount}}%
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
+{% block total %}
+<div class="mb-8">
+    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-400/30 rounded-xl p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center justify-between bg-white/10 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-calculator text-green-400 mr-3 text-xl"></i>
+                    <span class="text-gray-300 font-semibold">Total Cost:</span>
+                </div>
+                <span class="text-2xl font-bold text-green-400">₹{{tot_cost}}</span>
+            </div>
+            <div class="flex items-center justify-between bg-white/10 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-cubes text-blue-400 mr-3 text-xl"></i>
+                    <span class="text-gray-300 font-semibold">Total Items:</span>
+                </div>
+                <span class="text-2xl font-bold text-blue-400">{{tot_item}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-<h3>Order Items</h3>
-<hr>
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Product Name</th>
-        <th scope="col">Count</th>
-        <th scope="col">Retail Price</th>
-        <th scope="col">Discount</th>
-      </tr>
-    </thead>
-    <tbody>
-        {%for cart_record in cart%}
-            <tr>
-                <td>{{cart_record.0.Name}}</td>
-                <td>{{cart_record.1}}</td>
-                <td>{{cart_record.0.retail_price}}</td>
-                <td>{{cart_record.0.discount}} %</td>
-            </tr>
-        {%endfor%}
-    </tbody>
-  </table>
-{%endblock%}
-
-{%block total%}
-
-<h4>Total Cost : {{tot_cost}}</h4>
-<h4>Total number of Items : {{tot_item}} </h4>
-
-{%endblock%}
-
-{%block payment%}
-
-<button class="btn btn-success custom-add-new-btn" id="pay-btn">PROCEED TO PAY</button>
+{% block payment %}
+<div class="text-center">
+    <button id="pay-btn" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+        <i class="fas fa-credit-card mr-3 text-xl"></i>
+        Proceed to Payment
+    </button>
+</div>
 
 <!-- Razorpay's Javascript code. -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   var options = {
-     
-    // Enter the Key ID generated from the Dashboard
     key: "{{ razor_pub_key }}",
-     
-    // Amount is in currency subunits.
-    // Default currency is INR. Hence,
-    // 50000 refers to 50000 paise
     amount: "{{ amount }}",
     currency: "{{ currency }}",
-     
-    // Your/store name.
     name: "Shivadhesh",
-     
-    // Pass the `id` obtained in the response of Step 1
     order_id: "{{ order_id }}",
     callback_url: "{{ callback_url }}"
   };
    
-  // initialise razorpay with the options.
   var rzp1 = new Razorpay(options);
    
-  // add event listener to the payment button.
   document.getElementById("pay-btn").onclick = function (e) {
     rzp1.open();
     e.preventDefault();
   };
 </script>
-{%endblock%}
-
+{% endblock %}

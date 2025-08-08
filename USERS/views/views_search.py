@@ -89,6 +89,10 @@ class Search:
     def getAllCategories(request):
         categories = Category.objects.all()
         return categories
+    
+    def getListofCategories(request):
+        categories = Search.getAllCategories(request)
+        return JsonResponse({'categories': [category.Category_name for category in categories]})
 
     def getCategories(request):
         categories = Search.getAllCategories(request)

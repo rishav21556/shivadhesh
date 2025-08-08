@@ -1,9 +1,7 @@
-
-
-
-
 let category_list = ['All','Books and Media','Sports and Fitness','Beauty and Personal Care','Home and Kitchen','Fashion','Electronics'];
-let category = document.getElementsByClassName("category");
+// let category_list = []
+let category = document.getElementsByClassName("categories-dropdown");
+console.log(`category: ${category}`);
 category = category[0];
 
 for (let i =0 ;i < category_list.length; i++){

@@ -21,5 +21,5 @@ urlpatterns = [
 
     path('getOrders/',views_search.Search.getAllOrders,name = 'view_orders'),
     path('getOrders/<order_id>/',views_search.Search.order_detail,name = 'view_orders'),
-    path('getCategories/',views_search.Search.getAllCategories,name = 'get_categories'),
+    path('getCategories/',views_search.Search.getListofCategories,name = 'get_categories'),
 ]

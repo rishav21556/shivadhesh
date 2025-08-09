@@ -119,7 +119,7 @@ DATABASES = {
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASS'),
-        'HOST': '127.0.0.1',
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),  # Use environment variable or default to localhost
         'PORT': '5432'
     }
 }

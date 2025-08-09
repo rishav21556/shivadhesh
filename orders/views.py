@@ -18,6 +18,9 @@ from django.utils.decorators import method_decorator
 import razorpay
 from django.conf import settings
 from datetime import timezone
+from dotenv import load_dotenv
+import os
+load_dotenv()
 # Create your views here.
 
 
@@ -130,7 +133,8 @@ class OrderPlacement:
             
             
             new_order_id = order['id']
-            callbackUrl = 'http://127.0.0.1:8000/orders/complete-payment/'
+            API_BASE_URL = os.getenv('API_BASE_URL', '')
+            callbackUrl = f'{API_BASE_URL}/orders/complete-payment/'
             # callbackUrl = "{%url 'payment' cart_dir=${cart_product_dir}%}"
             # http://127.0.0.1:8000/orders/proceed-to-payment/cart/
             context = {
@@ -180,7 +184,7 @@ class OrderPlacement:
                 order.save()
                 Meta_dict.pop(order_id)
                 messages.info(request,"PAYMENT SUCCESSFULL")
-                return redirect("http://127.0.0.1:8000/users/home/see/view_cart/")
+                return redirect(f"{os.getenv('API_BASE_URL', '')}/users/home/see/view_cart/")
             else:
                 messages.info(request,"PAYMENT UNSUCESSFULL")
-                return redirect("http://127.0.0.1:8000/users/home/see/view_cart/")
+                return redirect(f"{os.getenv('API_BASE_URL', '')}/users/home/see/view_cart/")

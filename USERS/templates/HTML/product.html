@@ -126,6 +126,8 @@ function removeFromCart(productId, redirect) {
 // Quantity management (your existing JavaScript logic)
 let tot_cost = 0;
 let quantity_div = document.getElementsByClassName("dropdown");
+const API_BASE_URL = window.API_BASE_URL || document.querySelector('meta[name="api-base-url"]')?.content;
+
 if (quantity_div){
     let tot_item = 0;
     for (let i = 1;i<quantity_div.length ; i++){
@@ -133,7 +135,7 @@ if (quantity_div){
         let child = curr_div.children;
         let select = child[1];
         jQuery.ajax({
-            url : "http://127.0.0.1:8000/users/home/get-cart-count/"+select.id,
+            url : `${API_BASE_URL}/users/home/get-cart-count/${select.id}`,
             method : "GET",
             dataType:'json',
             success : function(response){
@@ -153,7 +155,7 @@ if (quantity_div){
         let select = child[1];
         select.addEventListener('change',function(){
             jQuery.ajax({
-                url : "http://127.0.0.1:8000/users/home/update-cart/"+select.id+"?value="+select.value,
+                url : `${API_BASE_URL}/users/home/update-cart/${select.id}?value=${select.value}`,
                 method : "GET",
                 dataFilter:'http',
                 success : function(response){

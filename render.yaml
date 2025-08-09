@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: shivadhesh
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      cd theme && npm install && cd ..
+      python manage.py collectstatic --noinput
+      python manage.py tailwind build
+    startCommand: gunicorn shivadhesh_website.wsgi --bind 0.0.0.0:$PORT

@@ -19,14 +19,13 @@ class Search:
             return Product.objects.all()
     def getProduct(request):
         if (request.method=="POST"):
-            print("Hi")
             products = request.POST.get("search")
             products = Product.objects.filter(Name__icontains=products)
             dirs = []
             for product in products:
                 dirs.append(product)
             return render(request,'HTML/home.html',{'results':dirs})
-    def getProduct_by_category(request,category_):
+    def getProduct_by_category(request,category_='All'):
         if (category_=='All'):
             dirs = Search.getAllProduct(request)
         else:

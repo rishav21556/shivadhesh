@@ -7,6 +7,7 @@ from .views import views_search,Login_Registerations,cart_fun
 
 
 urlpatterns = [ 
+    path('',views_search.Search.getProduct_by_category, name='home'),
     path('home/<category_>/',views_search.Search.getProduct_by_category,name = "home_category"),
     path('home/rishav/product/product_name/',views_search.Search.getProduct,name = "home_search"),
     path('autocomplete/<name>/',views_search.Search.autocomplete,name='autocomplete'),

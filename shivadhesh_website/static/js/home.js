@@ -4,6 +4,7 @@ const API_BASE_URL = window.API_BASE_URL || document.querySelector('meta[name="a
 // Async function to fetch categories
 async function fetchCategories() {
     try {
+        console.log(`API Base URL: ${API_BASE_URL}`);
         const response = await fetch(`${API_BASE_URL}/users/getCategories`);
         const data = await response.json();
         return data.categories || [];
@@ -31,7 +32,7 @@ async function populateCategoriesDropdown() {
             // Create the anchor element directly (no need for li in the current structure)
             let link = document.createElement("a");
             link.className = "block px-4 py-2 text-white hover:bg-white/20 hover:text-purple-300 transition-colors";
-            link.href = "http://127.0.0.1:8000/users/home/" + encodeURIComponent(category_list[i]);
+            link.href = `${API_BASE_URL}/users/home/` + encodeURIComponent(category_list[i]);
             link.innerHTML = `<i class="fas fa-tag mr-2"></i>${category_list[i]}`;
             
             // Append directly to the dropdown container
@@ -45,7 +46,8 @@ async function populateCategoriesDropdown() {
 // Async function to handle autocomplete
 async function handleAutocomplete(searchValue) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/users/autocomplete/${searchValue}`, {
+        console.log(`search value: ${searchValue}`);
+        const response = await fetch(`${API_BASE_URL}/users/autocomplete/${searchValue}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
